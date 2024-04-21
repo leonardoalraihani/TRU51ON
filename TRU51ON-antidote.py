@@ -2,9 +2,6 @@
 import os
 from cryptography.fernet import Fernet
 
-# Settings
-extension = ".TRU51ON"
-
 # Get the paths for Desktop, Downloads, Documents and Pictures
 userprofile = os.environ.get("USERPROFILE")
 desktop = os.path.join(userprofile, "Desktop")
@@ -39,7 +36,7 @@ for file in files:
         content_decrypted = Fernet(key).decrypt(content)
         with open(file, 'wb') as f:
             f.write(content_decrypted)
-        os.rename(file, file.replace(extension, ''))
+        os.rename(file, file.replace('.TRU51ON', ''))
     except:
         pass
 
